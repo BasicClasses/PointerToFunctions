@@ -1,5 +1,87 @@
 # Указатели на фунции
 
+Указатель на функцию — это переменная, которая хранит адрес функции (как указатель на данные хранит адрес переменной). 
+
+Где используется: 
+ - Callback-функции (передаём “что сделать” как параметр).
+ - Выбор стратегии: сортировка по-разному, разные формулы расчёта, разные обработчики событий.
+ - Таблица команд: “команда → функция” (например, интерпретатор команд).
+ - В низкоуровневых API на C (например, обработчики в библиотеках).
+
+## Синтаксис
+```
+ReturnType (*pointerName)(ParamTypes...);
+```
+
+```
+int mul(int a, int b) { return a * b; }
+
+int main() {
+    int (*pf)(int, int) = mul; // pf хранит адрес функции mul
+    int r = pf(3, 4);          // 12
+}
+```
+
+## typedef / using: делаем тип читаемым
+```
+using Op = int(*)(int, int);   // Op — “указатель на функцию: int(int,int)”
+
+int add(int a, int b) { return a + b; }
+int sub(int a, int b) { return a - b; }
+
+int main() {
+    Op op = add;
+    op = sub;
+}
+```
+
+## Передача функции как параметра
+```
+#include <iostream>
+
+using Op = int(*)(int, int);
+
+int apply(int x, int y, Op op) {
+    return op(x, y);
+}
+
+int add(int a, int b) { return a + b; }
+int mul(int a, int b) { return a * b; }
+
+int main() {
+    std::cout << apply(2, 3, add) << "\n"; // 5
+    std::cout << apply(2, 3, mul) << "\n"; // 6
+}
+```
+
+## Массив/таблица функций
+```
+#include <iostream>
+
+using Op = int(*)(int,int);
+
+int add(int a,int b){ return a+b; }
+int sub(int a,int b){ return a-b; }
+int mul(int a,int b){ return a*b; }
+
+int main() {
+    Op ops[] = { add, sub, mul };
+
+    int choice = 0;
+    int x = 10, y = 5;
+
+    std::cout << "0:add 1:sub 2:mul\n";
+    std::cin >> choice;
+
+    if (choice >= 0 && choice < 3)
+        std::cout << opsx, y << "\n";
+}
+```
+
+
+
+
+
 # Задания
 
 ## Transform: “функция как параметр”
